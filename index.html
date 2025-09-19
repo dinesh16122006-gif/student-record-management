@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Record Management (Linked List)</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f7fa;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #2c3e50;
+    }
+    .controls {
+      margin: 20px;
+      padding: 15px;
+      background: #ecf0f1;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    }
+    .controls input {
+      padding: 5px;
+      margin: 5px;
+    }
+    .controls button {
+      padding: 7px 12px;
+      margin: 5px;
+      border: none;
+      background: #3498db;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .controls button:hover {
+      background: #2980b9;
+    }
+    #list {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 30px;
+    }
+    .node {
+      background: #27ae60;
+      color: white;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 10px;
+      min-width: 120px;
+      text-align: center;
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .node:hover {
+      transform: scale(1.05);
+    }
+    .arrow {
+      font-size: 24px;
+      margin: 0 10px;
+      color: #2c3e50;
+    }
+    .highlight {
+      background: #e67e22 !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎓 Student Record Management (Linked List)</h1>
+
+  <div class="controls">
+    <input type="number" id="rollNo" placeholder="Roll No">
+    <input type="text" id="name" placeholder="Name">
+    <input type="number" id="age" placeholder="Age">
+    <input type="number" id="marks" placeholder="Marks">
+    <br>
+    <button onclick="addStudent()">Add Student</button>
+    <button onclick="displayStudents()">Display All</button>
+    <button onclick="searchStudent()">Search</button>
+    <button onclick="deleteStudent()">Delete</button>
+  </div>
+
+  <div id="list"></div>
+
+  <script>
+    let students = []; // Linked list simulated as array
+
+    function renderList(highlightIndex = -1) {
+      const container = document.getElementById("list");
+      container.innerHTML = "";
+
+      students.forEach((s, index) => {
+        let node = document.createElement("div");
+        node.className = "node" + (highlightIndex === index ? " highlight" : "");
+        node.innerHTML = <b>${s.rollNo}</b><br>${s.name}<br>Age: ${s.age}<br>Marks: ${s.marks};
+        container.appendChild(node);
+
+        if (index < students.length - 1) {
+          let arrow = document.createElement("div");
+          arrow.className = "arrow";
+          arrow.innerHTML = "→";
+          container.appendChild(arrow);
+        }
+      });
+
+      if (students.length === 0) {
+        container.innerHTML = "<p>No records found ❌</p>";
+      }
+    }
+
+    function addStudent() {
+      const rollNo = document.getElementById("rollNo").value;
+      const name = document.getElementById("name").value;
+      const age = document.getElementById("age").value;
+      const marks = document.getElementById("marks").value;
+
+      if (!rollNo || !name || !age || !marks) {
+        alert("⚠ Please enter all details!");
+        return;
+      }
+
+      students.push({ rollNo, name, age, marks });
+      renderList();
+      clearInputs();
+    }
+
+    function displayStudents() {
+      renderList();
+    }
+
+    function searchStudent() {
+      const rollNo = prompt("Enter Roll No to search:");
+      if (!rollNo) return;
+
+      const index = students.findIndex(s => s.rollNo === rollNo);
+      if (index !== -1) {
+        renderList(index);
+        alert(✅ Found: ${students[index].name}, Age: ${students[index].age}, Marks: ${students[index].marks});
+      } else {
+        alert("❌ Student not found!");
+      }
+    }
+
+    function deleteStudent() {
+      const rollNo = prompt("Enter Roll No to delete:");
+      if (!rollNo) return;
+
+      const index = students.findIndex(s => s.rollNo === rollNo);
+      if (index !== -1) {
+        students.splice(index, 1);
+        renderList();
+        alert("🗑 Student deleted!");
+      } else {
+        alert("❌ Student not found!");
+      }
+    }
+
+    function clearInputs() {
+      document.getElementById("rollNo").value = "";
+      document.getElementById("name").value = "";
+      document.getElementById("age").value = "";
+      document.getElementById("marks").value = "";
+    }
+  </script>
+</body>
+</html>
